@@ -568,10 +568,13 @@ public class Jugador extends Cascaron {
         float xSpeed = 0;
         float ySpeed = 0;
 
-        if (inKnockback) {
+  if (inKnockback) {
             xSpeed = knockbackDir * knockbackSpeed;
-            if (!inAir && airSpeed >= 0)
+            
+            // Si knockbackDir es 0, es porque cayó al vacío, NO queremos que se detenga.
+            if (!inAir && airSpeed >= 0 && knockbackDir != 0) {
                 inKnockback = false;
+            }
         } else {
             if (left) {
                 xSpeed -= playerSpeed;
@@ -963,13 +966,20 @@ public class Jugador extends Cascaron {
         return airSpeed;
     }
 
-    private void revisarAgua(ObjectManager objectMan) {
+   private void revisarAgua(ObjectManager objectMan) {
         if (objectMan.checkMuertePorAgua(hitbox)) {
             if (!isDead) {
                 if (audioPlayer != null)
-                    audioPlayer.reproducirEfecto("sonido-dano.wav");
-                vidaActual = 0;
-                setDead(true);
+                    audioPlayer.reproducirEfecto("sonido-dano.wav"); // Puedes cambiar este sonido por uno de caída si tienes
+                
+                vidaActual = 0; // Matamos al jugador lógicamente
+                
+                // --- INICIA EFECTO DE CAÍDA AL VACÍO ---
+                inKnockback = true; 
+                knockbackDir = 0; // 0 para que no se mueva a los lados
+                inAir = true; // Forzamos que esté "en el aire"
+                airSpeed = 3.0f * Juego.SCALE; // Lo empujamos rápidamente hacia ABAJO
+                // ----------------------------------------
             }
         }
     }

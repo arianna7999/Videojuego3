@@ -56,7 +56,6 @@ public class MetodosAyuda {
 
                     case 2:
                           if (valor == 11 || valor == 4 || valor == 5 ||
-                                valor == 16 || valor == 17 ||
                                 valor == 3 || valor == 15 || valor == 27 ||
                                 valor == 8 || valor == 20 || valor == 32|| valor==45) {
                             return false; 
