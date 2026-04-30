@@ -873,14 +873,9 @@ public class Jugador extends Cascaron {
         golpesAcertados++;
     }
 
-    public void registrarMuerte(elementos.managers.ScoreManager scoreMan) {
+    public void registrarMuerte() {
         enemigosDerrotados++;
         calcularMejoraDaño();
-
-        if (scoreMan != null) {
-            scoreMan.checkInsigniaVerdugo(golpesAcertados, enemigosDerrotados);
-            scoreMan.addPuntosEnemigoDerrotado(150); // Le da 150 pts por matar a alguien
-        }
     }
 
     private void calcularMejoraDaño() {

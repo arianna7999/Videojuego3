@@ -6,41 +6,59 @@ import java.awt.event.WindowFocusListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import elementos.pantallas.MenuOpciones;
 import elementos.pantallas.MenuPrincipal;
+import utils.AudioPlayer;
 
 public class VtaJuego extends JFrame {
 
-    private JFrame vta;
     private JPanel contenedor;
     private CardLayout cardLayout;
+    private AudioPlayer audioPlayer = new AudioPlayer();
 
     public VtaJuego(PanelJuego n) {
-        vta = new JFrame();
-        vta.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        vta.setUndecorated(true); // 1. Quitar bordes primero
+        // Configuraciones de la Ventana (Modo Ventana)
+        this.setTitle("Mi Juego");                   // Título de la ventana
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setUndecorated(false);                 // false = Mostrar bordes y botones
+        this.setResizable(true);                    // true = Permitir cambiar el tamaño
+        
+        // Definir tamaño de la ventana
+        this.setSize(1280, 720);                    // Tamaño inicial
+        this.setLocationRelativeTo(null);           // Centrar en pantalla
 
-        vta.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        // Configuración del Layout
         cardLayout = new CardLayout();
         contenedor = new JPanel(cardLayout);
+
+        // Inicialización de Pantallas
         MenuPrincipal menu = new MenuPrincipal(this);
+        MenuOpciones opciones = new MenuOpciones(this);
+
         contenedor.add(menu, "MENU");
         contenedor.add(n, "JUEGO");
+        contenedor.add(opciones, "OPCIONES");
 
-        vta.add(contenedor);
-        vta.setVisible(true);
+        // Agregar contenedor principal al JFrame
+        this.add(contenedor);
 
-        vta.revalidate();
-        vta.repaint();
-        vta.addWindowFocusListener(new WindowFocusListener() {
+        // Listener de foco para pausar el juego
+        this.addWindowFocusListener(new WindowFocusListener() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
+                // Opcional: Reanudar audio o juego
             }
 
             @Override
             public void windowLostFocus(WindowEvent e) {
-                n.getGame().windowFocusLost();
+                if (n.getGame() != null) {
+                    n.getGame().windowFocusLost();
+                }
             }
         });
+
+        // Mostrar la ventana
+        this.setVisible(true);
     }
 
     public void mostrarMenu() {
@@ -53,4 +71,14 @@ public class VtaJuego extends JFrame {
         contenedor.getComponent(1).requestFocusInWindow();
     }
 
+    public void mostrarOpciones() {
+        cardLayout.show(contenedor, "OPCIONES");
+        contenedor.revalidate();
+        contenedor.repaint();
+        contenedor.getComponent(2).requestFocusInWindow();
+    }
+
+    public AudioPlayer getAudioPlayer() {
+        return this.audioPlayer;
+    }
 }

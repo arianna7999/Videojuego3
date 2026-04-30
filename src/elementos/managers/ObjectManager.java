@@ -204,8 +204,8 @@ public class ObjectManager {
                         recompensas.add(new Recompensas(xPos, yPos, LLAVE));
                         break;
                     case 3:
-                        puertas.add(new PuertaMovil(xPos, yPos, PUERTA, 150));
-                        break;
+                       puertas.add(new PuertaMovil(xPos, yPos, PUERTA, 150, nivelActual));
+                    break;
                     case 4:
                         plataformas.add(new PlataformaMovil(xPos, yPos, PLATAFORMA, 300, false));
                         break;
@@ -273,17 +273,32 @@ public class ObjectManager {
         }
     }
 
-    public void checkObjectHit(java.awt.geom.Rectangle2D.Float attackBox) {
-
+    public void checkObjectHit(java.awt.geom.Rectangle2D.Float attackBox, Jugador j) {
         for (Contenedor c : contenedores) {
             if (c.isActivo() && c.getEstado() == INACTIVO && attackBox.intersects(c.getHitbox())) {
                 c.recibirGolpe();
 
                 if (c.getTipoObjeto() == BARRIL) {
                     audioPlayer.reproducirEfecto("sonido-explosion.wav");
-                    int rand = (int) (Math.random() * 3);
-                    int tipoAtomo = (rand == 0) ? ATOMO_H : (rand == 1) ? ATOMO_O : ATOMO_C;
-                    recompensas.add(new Recompensas((int) c.getHitbox().x, (int) c.getHitbox().y, tipoAtomo));
+                    java.util.ArrayList<Integer> opciones = new java.util.ArrayList<>();
+
+                    if (j.getAtomosH() < 2)
+                        opciones.add(ATOMO_H);
+                    if (j.getAtomosO() < 2)
+                        opciones.add(ATOMO_O);
+                    if (j.getAtomosC() < 2)
+                        opciones.add(ATOMO_C);
+
+                    int objetoASoltar;
+
+                    if (opciones.isEmpty()) {
+                        objetoASoltar = CORAZON;
+                    } else {
+                        int rand = (int) (Math.random() * opciones.size());
+                        objetoASoltar = opciones.get(rand);
+                    }
+
+                    recompensas.add(new Recompensas((int) c.getHitbox().x, (int) c.getHitbox().y, objetoASoltar));
                 }
 
                 if (c.getTipoObjeto() == COFRE) {
@@ -586,20 +601,53 @@ public class ObjectManager {
         j.setEnPlataforma(false);
     }
 
-    public void checkPuertaInteraccion(Jugador j) {
+    public void checkPuertaInteraccion(Jugador j, int levelIndex) {
         for (PuertaMovil p : puertas) {
             if (j.getHitbox().intersects(p.getHitbox())) {
-                if (nivelActual != 2) {
-                    if (j.getTieneLlave() && !p.estaAbierta() && !p.estaAbriendo()) {
+
+                if (!p.estaAbierta() && !p.estaAbriendo()) {
+                    boolean puedeAbrir = false;
+
+                    if (j.getTieneLlave()) {
+                        puedeAbrir = true;
+                    } else {
+                        if (levelIndex == 0) {
+                            if (j.sintetizarAgua()) {
+                                puedeAbrir = true;
+                            } else {
+                                // EL JUEGO TE AVISA QUÉ TE FALTA
+                                System.out.println("¡ACCESO DENEGADO! Requiere Agua (H2O). Tienes -> H: "
+                                        + j.getAtomosH() + " | O: " + j.getAtomosO());
+                            }
+                        } else if (levelIndex == 1) {
+                            if (j.sintetizarDioxidoCarbono()) {
+                                puedeAbrir = true;
+                            } else {
+                                System.out.println("¡ACCESO DENEGADO! Requiere CO2. Tienes -> C: " + j.getAtomosC()
+                                        + " | O: " + j.getAtomosO());
+                            }
+                        } else {
+                            if (j.sintetizarDioxidoCarbono()) {
+                                puedeAbrir = true;
+                            } else {
+                                System.out.println("¡ACCESO DENEGADO! Requiere CH4.");
+                            }
+                        }
+                    }
+
+                    if (puedeAbrir) {
                         p.abrir();
-                        audioPlayer.reproducirEfecto("sonido-abertura.wav");
+                        if (audioPlayer != null) {
+                            audioPlayer.reproducirEfecto("sonido-abertura.wav");
+                        }
                     }
                 }
-
-                if (j.getHitbox().x < p.getHitbox().x) {
-                    j.getHitbox().x = p.getHitbox().x - j.getHitbox().width - 1;
-                } else {
-                    j.getHitbox().x = p.getHitbox().x + p.getHitbox().width + 1;
+                if (!p.estaAbierta()) {
+                    if (j.getHitbox().x < p.getHitbox().x) {
+                        j.getHitbox().x = p.getHitbox().x - j.getHitbox().width - 1;
+                    } else {
+                        j.getHitbox().x = p.getHitbox().x + p.getHitbox().width + 1;
+                    }
                 }
             }
         }
@@ -637,5 +685,26 @@ public class ObjectManager {
             }
         }
     }
+    public void drawPuertasYRejas(Graphics g, int xLvlOffset, int yLvlOffset, int levelIndex) {
+    for (PuertaMovil p : puertas) {
+        if (p.isActivo()) {
+            if (levelIndex == 2) { // Mundo 3 (Desierto)
+                int anchoMundo3 = (int) (100 * Juego.SCALE);
+                int altoMundo3 = (int) (100 * Juego.SCALE);
+                int ajusteX = 0;
+                int ajusteY = -100; // Ajuste visual definido en tu código
+                
+                // Dibujar marco y rejas
+               
+                g.drawImage(rejasM3[p.getAnimInd()], (int) (p.getHitbox().x - xLvlOffset) + ajusteX,
+                        (int) (p.getHitbox().y - yLvlOffset) + ajusteY, anchoMundo3, altoMundo3, null);
+            } else {
+                // Puertas estándar de Mundos 1 y 2
+                g.drawImage(puertaImg, (int) (p.getHitbox().x - xLvlOffset),
+                        (int) (p.getHitbox().y - yLvlOffset), (int) (32 * Juego.SCALE), (int) (96 * Juego.SCALE), null);
+            }
+        }
+    }
+}
 
 }
