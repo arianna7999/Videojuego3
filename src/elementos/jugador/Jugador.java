@@ -4,11 +4,11 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import codigo.ObjectManager;
 import elementos.enemigos.Cascaron;
 import elementos.enemigos.FlechaLluvia;
 import elementos.enemigos.FlechaRecta;
 import elementos.managers.EnemyManager;
-import elementos.managers.ObjectManager;
 import elementos.objetos.PlataformaMovil;
 import juego.Juego;
 import static utils.Constantes.ConstantesJugador.ARCO;
@@ -993,7 +993,11 @@ public class Jugador extends Cascaron {
             }
         }
     }
-
+    public void vaciarInventario() {
+        atomosH = 0;
+        atomosO = 0;
+        atomosC = 0;
+    }
     public void setSpawn(int levelIndex) {
         switch (levelIndex) {
             case 3:

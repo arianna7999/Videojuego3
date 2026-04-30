@@ -5,13 +5,11 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.FloatControl;
 
 public class AudioPlayer {
     
     private Clip musicaFondo;
     private Clip clipErrorLargo; // Clip específico para "dua.wav"
-    private float volumenActual = 1.0f;
 
     public void reproducirMusica(String nombreArchivo) {
         detenerMusica();
@@ -115,27 +113,6 @@ public class AudioPlayer {
             clip.start();
         } catch (Exception e) {
             System.err.println("Error al reproducir efecto: " + e.getMessage());
-        }
-    }
-
-public void setVolumen(float valor) {
-        this.volumenActual = valor; // Guardamos el valor
-        actualizarVolumenClip(musicaFondo, valor);
-        actualizarVolumenClip(clipErrorLargo, valor);
-    }
-
-    private void actualizarVolumenClip(Clip clip, float valor) {
-        if (clip != null && clip.isOpen()) {
-            try {
-                if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                    // Escala logarítmica para que el oído lo sienta natural
-                    float dB = (float) (Math.log(valor <= 0 ? 0.0001 : valor) / Math.log(10.0) * 20.0);
-                    gainControl.setValue(dB);
-                }
-            } catch (Exception e) {
-                System.err.println("No se pudo ajustar el volumen del clip.");
-            }
         }
     }
 }

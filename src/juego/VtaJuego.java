@@ -6,16 +6,13 @@ import java.awt.event.WindowFocusListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import elementos.pantallas.MenuOpciones;
 import elementos.pantallas.MenuPrincipal;
-import utils.AudioPlayer;
 
 public class VtaJuego extends JFrame {
 
     private JFrame vta;
     private JPanel contenedor;
     private CardLayout cardLayout;
-    private AudioPlayer audioPlayer = new AudioPlayer();
 
     public VtaJuego(PanelJuego n) {
         vta = new JFrame();
@@ -26,10 +23,8 @@ public class VtaJuego extends JFrame {
         cardLayout = new CardLayout();
         contenedor = new JPanel(cardLayout);
         MenuPrincipal menu = new MenuPrincipal(this);
-        MenuOpciones opciones = new MenuOpciones(this);
         contenedor.add(menu, "MENU");
         contenedor.add(n, "JUEGO");
-        contenedor.add(opciones, "OPCIONES");
 
         vta.add(contenedor);
         vta.setVisible(true);
@@ -58,14 +53,4 @@ public class VtaJuego extends JFrame {
         contenedor.getComponent(1).requestFocusInWindow();
     }
 
-    public void mostrarOpciones() {
-    cardLayout.show(contenedor, "OPCIONES");
-    contenedor.revalidate();
-    contenedor.repaint();
-    // Es vital darle el foco para que detecte el ratón y teclado
-    contenedor.getComponent(2).requestFocusInWindow(); 
-}
-    public AudioPlayer getAudioPlayer() {
-        return this.audioPlayer;
-    }
 }

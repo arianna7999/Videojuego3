@@ -183,6 +183,21 @@ public class Constantes {
                             return 4;
                     }
                     break;
+                case ARMORED_AXEMAN:
+                    switch (enemy_state) {
+                        case INACTIVO:
+                            return 6;
+                        case CORRER:
+                            return 6;
+                        case ATACAR:
+                            return 11;
+                        case RECIBIR_GOLPE:
+                            return 4;
+                        case MUERTO:
+                            return 4;
+                    }
+                    break;
+
             }
 
             return 0;
