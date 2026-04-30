@@ -1,0 +1,71 @@
+package juego;
+
+import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import elementos.pantallas.MenuOpciones;
+import elementos.pantallas.MenuPrincipal;
+import utils.AudioPlayer;
+
+public class VtaJuego extends JFrame {
+
+    private JFrame vta;
+    private JPanel contenedor;
+    private CardLayout cardLayout;
+    private AudioPlayer audioPlayer = new AudioPlayer();
+
+    public VtaJuego(PanelJuego n) {
+        vta = new JFrame();
+        vta.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        vta.setUndecorated(true); // 1. Quitar bordes primero
+
+        vta.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        cardLayout = new CardLayout();
+        contenedor = new JPanel(cardLayout);
+        MenuPrincipal menu = new MenuPrincipal(this);
+        MenuOpciones opciones = new MenuOpciones(this);
+        contenedor.add(menu, "MENU");
+        contenedor.add(n, "JUEGO");
+        contenedor.add(opciones, "OPCIONES");
+
+        vta.add(contenedor);
+        vta.setVisible(true);
+
+        vta.revalidate();
+        vta.repaint();
+        vta.addWindowFocusListener(new WindowFocusListener() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                n.getGame().windowFocusLost();
+            }
+        });
+    }
+
+    public void mostrarMenu() {
+        cardLayout.show(contenedor, "MENU");
+        contenedor.getComponent(0).requestFocusInWindow();
+    }
+
+    public void mostrarJuego() {
+        cardLayout.show(contenedor, "JUEGO");
+        contenedor.getComponent(1).requestFocusInWindow();
+    }
+
+    public void mostrarOpciones() {
+    cardLayout.show(contenedor, "OPCIONES");
+    contenedor.revalidate();
+    contenedor.repaint();
+    // Es vital darle el foco para que detecte el ratón y teclado
+    contenedor.getComponent(2).requestFocusInWindow(); 
+}
+    public AudioPlayer getAudioPlayer() {
+        return this.audioPlayer;
+    }
+}
