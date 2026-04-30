@@ -983,21 +983,36 @@ public class Jugador extends Cascaron {
             }
         }
     }
+private void revisarBloqueDanoM3(int levelIndex) {
+        if (levelIndex == 2) { // Recuerda: levelIndex 2 es el Mundo 3
+            int leftCol = (int) (hitbox.x - 3) / juego.Juego.TILES_SIZE;
+            int rightCol = (int) (hitbox.x + hitbox.width + 3) / juego.Juego.TILES_SIZE;
+            int topRow = (int) (hitbox.y - 3) / juego.Juego.TILES_SIZE;
+            int bottomRow = (int) (hitbox.y + hitbox.height + 5) / juego.Juego.TILES_SIZE;
 
-    private void revisarBloqueDanoM3(int levelIndex) {
-        // Solo funciona en el Mundo 3 (index 2)
-        if (levelIndex == 2) {
-            int x = (int) (hitbox.x + hitbox.width / 2) / juego.Juego.TILES_SIZE;
-            int y = (int) (hitbox.y + hitbox.height / 2) / juego.Juego.TILES_SIZE;
+            for (int c = leftCol; c <= rightCol; c++) {
+                for (int r = topRow; r <= bottomRow; r++) {
+                    if (c >= 0 && c < lvlData[0].length && r >= 0 && r < lvlData.length) {
+                        
+                        int bloquePisado = lvlData[r][c];
+                        
+                        // --- ESTA LÍNEA IMPRIMIRÁ EN LA CONSOLA QUÉ BLOQUE ESTÁS TOCANDO ---
+                        // Si pisas el nopal y en la consola NO sale "Bloque actual: 46", 
+                        // entonces el problema está en cómo el LevelManager lee la imagen.
+                        System.out.println("Bloque tocado: " + bloquePisado); 
 
-            if (x >= 0 && x < lvlData[0].length && y >= 0 && y < lvlData.length) {
-                if (lvlData[y][x] == 45) {
-                    if (!isDead && invulnerableTimer == 0) {
-                        if (audioPlayer != null) {
-                            audioPlayer.reproducirEfecto("sonido-dano.wav");
+                        if (bloquePisado == 42 || bloquePisado == 43 || bloquePisado == 44 || bloquePisado == 45 || bloquePisado == 46) {
+                            
+                            System.out.println("¡TRAMPA DETECTADA! isDead: " + isDead + ", InvTimer: " + invulnerableTimer);
+
+                            if (!isDead && invulnerableTimer == 0) {
+                                if (audioPlayer != null) {
+                                    audioPlayer.reproducirEfecto("sonido-dano.wav");
+                                }
+                                recibirDaño(20, -playerDirec);
+                                return; 
+                            }
                         }
-                        // Aplicamos el daño (20 puntos, igual que los picos)
-                        recibirDaño(20, -playerDirec);
                     }
                 }
             }
