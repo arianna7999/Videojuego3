@@ -14,10 +14,10 @@ public class Enemy3 extends Enemigo {
     private int aniTick, aniIndex, aniSpeed = 25;
     private int deadTimer = 0;
 
-    private float xDrawOffset = 58 * Juego.SCALE;
-    private float yDrawOffset = 70 * Juego.SCALE;
-    private static final int ENM_DRAW_WIDTH = 140;
-    private static final int ENM_DRAW_HEIGHT = 140;
+    private float xDrawOffset = 30 * Juego.SCALE;
+    private float yDrawOffset = 65 * Juego.SCALE;
+    private static final int ENM_DRAW_WIDTH = 85;
+    private static final int ENM_DRAW_HEIGHT = 85;
     private int tipoEnemigo;
 
     public Enemy3(float x, float y, int levelNumber) {

@@ -122,6 +122,14 @@ public class Constantes {
                         case MUERTO:   return 7;
                         default: return 1;
                     }
+                case RAT:
+                    switch (enemy_state) {
+                        case INACTIVO: return 5;
+                        case CORRER:   return 8;
+                        case ATACAR:   return 6;
+                        case MUERTO:   return 5;
+                        default: return 1;
+                    }
                 case WARRIOR:
                     switch (enemy_state) {
                         case INACTIVO: return 5;
@@ -148,6 +156,7 @@ public class Constantes {
                     }
                 case MOTH:
                     switch (enemy_state) {
+                        case INACTIVO: return 4;
                         case CORRER:   return 4;
                         case ATACAR:   return 4;
                         case MUERTO:   return 6;
@@ -217,14 +226,6 @@ public class Constantes {
                         case CORRER:   return 5;
                         case ATACAR:   return 6;
                         case MUERTO:   return 6;
-                        default: return 1;
-                    }
-                case RAT: 
-                    switch (enemy_state) {
-                        case INACTIVO: return 5;
-                        case CORRER:   return 8;
-                        case ATACAR:   return 6;
-                        case MUERTO:   return 5;
                         default: return 1;
                     }
                 default:

@@ -60,9 +60,9 @@ public class EnemyManager {
                     case 4:
                         enemigos.add(new Enemy3(xPos, yPos, nivelActual));
                         break;
-                    //case 5:
-                        //enemigos.add(new Enemy4(xPos, yPos, nivelActual));
-                        //break;
+                    case 5:
+                        enemigos.add(new Enemy4(xPos, yPos, nivelActual));
+                        break;
                     default:
                         break;
                 }
@@ -98,7 +98,7 @@ public class EnemyManager {
                 }
                 
                 if (e.getEnemyState() == MUERTO) {
-                    // --- NUEVO: Le mandamos el ScoreManager al Jugador ---
+
                     jugador.registrarMuerte(scoreManager);
                 }
                 return;

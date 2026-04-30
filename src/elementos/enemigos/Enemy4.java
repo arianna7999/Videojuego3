@@ -100,25 +100,35 @@ public class Enemy4 extends Enemigo {
         animaciones = new BufferedImage[8][15];
 
         switch (levelNumber) {
+
             case 0:
+            case 2:
                 tipoEnemigo = RAT;
                 img = LoadSave.GetSpriteAtlas(LoadSave.RAT_SPRITE);
+                cargarCiclo(img,INACTIVO, 0);
+                cargarCiclo(img,CORRER, 64);
+                cargarCiclo(img, ATACAR, 128);
+                cargarCiclo(img, MUERTO, 192);
                 break;
             case 1:
                 tipoEnemigo = MUSHROOM;
                 img = LoadSave.GetSpriteAtlas(LoadSave.MUSHROOM_SPRITE);
+                cargarCiclo(img, INACTIVO, 0);
+                cargarCiclo(img, CORRER, 64);
+                cargarCiclo(img, ATACAR, 128);
+                cargarCiclo(img, MUERTO, 192);
+                break;
+            case 3:
+                tipoEnemigo = MOTH;
+                img = LoadSave.GetSpriteAtlas(LoadSave.MOTH_SPRITE);
+                cargarCiclo(img, INACTIVO, 0);
+                cargarCiclo(img, CORRER, 0);
+                cargarCiclo(img, ATACAR, 0);
+                cargarCiclo(img, MUERTO, 64);
                 break;
             default:
-                tipoEnemigo = RAT;
-                img = LoadSave.GetSpriteAtlas(LoadSave.RAT_SPRITE);
                 break;
         }
-
-        // Cada fila separada por 64 px
-        cargarCiclo(img, INACTIVO, 0); // Fila 1
-        cargarCiclo(img, CORRER, 64); // Fila 2
-        cargarCiclo(img, ATACAR, 128); // Fila 3
-        cargarCiclo(img, MUERTO, 192); // Fila 4
     }
 
     private void cargarCiclo(BufferedImage img, int estado, int yPos) {
